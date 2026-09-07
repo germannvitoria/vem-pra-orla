@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vem Pra Orla</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --primary: #1f9860;
+    --primary-dark: #16724a;
+    --primary-light: #e8f7f0;
+    --green2: #1F9823;
+    --green2-light: #e8f7e8;
+    --teal: #1F9498;
+    --teal-light: #e8f5f6;
+    --text-dark: #1a3a2a;
+    --text-muted: #5a7a6a;
+    --border: #c5e8d8;
+    --bg: #f2faf6;
+    --white: #ffffff;
+    --card-shadow: 0 4px 20px rgba(31,152,96,0.10);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    padding-bottom: 0;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--teal) 100%);
+    padding: 0.6rem 1.5rem;
+    box-shadow: 0 2px 12px rgba(31,152,96,0.25);
+    position: sticky; top: 0; z-index: 1000;
+  }
+  .navbar-brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 1.25rem; color: white; text-decoration: none;
+  }
+  .logo-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: white; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); flex-shrink: 0; overflow: hidden;
+  }
+  
+
+  /* SECTIONS */
+  .section { padding: 2rem 0 1rem; }
+  .section-title {
+    font-size: 1.1rem; font-weight: 700; color: var(--primary-dark);
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 0.6rem; border-bottom: 2px solid var(--border);
+    margin-bottom: 1.2rem;
+  }
+  .section-title i { font-size: 1.2rem; color: var(--primary); }
+
+  /* CARDS */
+  .card-custom {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--card-shadow); border: 1px solid var(--border);
+    padding: 1.2rem; height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card-custom:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(31,152,96,0.15); }
+
+  /* METRIC CARDS */
+  .metric-card {
+    text-align: center;
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--card-shadow); border: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+  }
+  .metric-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.7rem; font-size: 1.4rem;
+  }
+  .metric-value { font-size: 1.8rem; font-weight: 800; color: var(--text-dark); line-height: 1; }
+  .metric-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+
+  .bg-green-light { background: var(--primary-light); color: var(--primary); }
+  .bg-teal-light { background: var(--teal-light); color: var(--teal); }
+  .bg-green2-light { background: var(--green2-light); color: var(--green2); }
+  .bg-amber-light { background: #fff8e8; color: #b07005; }
+
+  /* WEATHER CARDS */
+  .weather-main {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--teal) 100%);
+    border-radius: var(--radius); color: white; padding: 1.5rem;
+    position: relative; overflow: hidden;
+  }
+  .weather-main::after {
+    content: ''; position: absolute; right: -20px; top: -20px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .weather-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+  .weather-desc { font-size: 1rem; opacity: 0.9; margin-top: 4px; }
+  .weather-meta { font-size: 0.85rem; opacity: 0.75; margin-top: 8px; }
+
+  .forecast-card {
+    background: white; border-radius: 12px; text-align: center; padding: 0.9rem 0.6rem;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border);
+  }
+  .forecast-day { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+  .forecast-icon { font-size: 1.5rem; margin: 6px 0; }
+  .forecast-temp { font-size: 1rem; font-weight: 700; color: var(--text-dark); }
+  .forecast-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* LEISURE INDEX */
+  .leisure-score-wrap {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .leisure-score {
+    font-size: 4rem; font-weight: 900; color: var(--primary);
+    line-height: 1;
+  }
+  .leisure-score-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+  .progress-leisure {
+    height: 10px; border-radius: 5px; background: #e0f0ea;
+    margin-top: 12px; width: 100%;
+  }
+  .progress-leisure-fill {
+    height: 100%; border-radius: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--green2));
+    transition: width 1s ease;
+  }
+
+  .factor-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0.5rem 0.75rem; border-radius: 8px;
+    background: var(--primary-light); margin-bottom: 8px;
+    font-size: 0.85rem; color: var(--text-dark);
+  }
+  .factor-badge .bi { color: var(--primary); }
+
+  .activity-pill {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--primary-light); border-radius: 12px;
+    padding: 0.8rem; text-align: center; transition: background 0.2s;
+  }
+  .activity-pill:hover { background: #d0f0e4; }
+  .activity-emoji { font-size: 1.8rem; }
+  .activity-name { font-size: 0.75rem; font-weight: 600; color: var(--text-dark); margin-top: 4px; }
+
+  /* FORM */
+  .form-label { font-weight: 600; color: var(--text-dark); font-size: 0.875rem; margin-bottom: 4px; }
+  .form-control, .form-select {
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 0.55rem 0.9rem; font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,152,96,0.15);
+    outline: none;
+  }
+  .btn-primary-custom {
+    background: var(--primary); color: white; border: none;
+    border-radius: 10px; padding: 0.65rem 1.4rem; font-weight: 600;
+    font-size: 0.9rem; cursor: pointer; transition: background 0.2s, transform 0.1s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .btn-primary-custom:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-primary-custom:active { transform: translateY(0); }
+
+  /* OCCURRENCES LIST */
+  .occurrence-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+  }
+  .occurrence-item:last-child { border-bottom: none; }
+  .occurrence-icon-wrap {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .occurrence-icon-wrap.high { background: #fee2e2; color: #b91c1c; }
+  .occurrence-icon-wrap.medium { background: #fef9e8; color: #b07005; }
+  .occurrence-icon-wrap.low { background: var(--primary-light); color: var(--primary-dark); }
+  .occurrence-body { flex: 1; min-width: 0; }
+  .occurrence-row-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .occurrence-text { font-size: 0.85rem; color: var(--text-dark); font-weight: 600; }
+  .occurrence-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+
+  .badge-impact {
+    font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    display: inline-flex; align-items: center; margin-left: 6px;
+  }
+  .badge-high { background: #fee2e2; color: #b91c1c; }
+  .badge-medium { background: #fef9e8; color: #b07005; }
+  .badge-low { background: var(--primary-light); color: var(--primary-dark); }
+
+  /* CHATBOT FAB */
+  .chatbot-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  }
+  .chatbot-btn {
+    width: 60px; height: 60px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: white; font-size: 1.5rem; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(31,152,96,0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .chatbot-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(31,152,96,0.5); }
+
+  .chatbot-panel {
+    position: fixed; bottom: 96px; right: 24px; z-index: 9999;
+    width: 340px; background: white; border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    border: 1px solid var(--border);
+    display: none; flex-direction: column; overflow: hidden;
+    max-height: 480px;
+  }
+  .chatbot-panel.open { display: flex; }
+
+  .chatbot-header {
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: white; padding: 1rem 1.2rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .chatbot-header-info { display: flex; align-items: center; gap: 10px; }
+  .chatbot-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chatbot-title { font-weight: 700; font-size: 0.95rem; }
+  .chatbot-status { font-size: 0.72rem; opacity: 0.85; }
+  .chatbot-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; opacity: 0.8; }
+  .chatbot-close:hover { opacity: 1; }
+
+  .chatbot-messages {
+    flex: 1; overflow-y: auto; padding: 1rem;
+    display: flex; flex-direction: column; gap: 10px;
+    background: #f9fdf9;
+  }
+  .chat-bubble {
+    max-width: 82%; padding: 0.6rem 0.9rem; border-radius: 14px;
+    font-size: 0.85rem; line-height: 1.4;
+  }
+  .chat-bubble.bot {
+    background: white; color: var(--text-dark);
+    border: 1px solid var(--border); align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .chat-bubble.user {
+    background: var(--primary); color: white;
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+
+  .chatbot-input-wrap {
+    padding: 0.8rem; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; background: white;
+  }
+  .chatbot-input {
+    flex: 1; border: 1.5px solid var(--border); border-radius: 22px;
+    padding: 0.45rem 0.9rem; font-size: 0.85rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .chatbot-input:focus { border-color: var(--primary); }
+  .chatbot-send {
+    width: 36px; height: 36px; border-radius: 50%; border: none;
+    background: var(--primary); color: white; font-size: 0.9rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.2s;
+  }
+  .chatbot-send:hover { background: var(--primary-dark); }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, var(--primary-dark), var(--teal));
+    color: white;
+    padding: 2rem 0 1.5rem;
+    text-align: center;
+    box-shadow: 0 -4px 20px rgba(31,152,96,0.25);
+    margin-top: 2rem;
+  }
+  footer .footer-brand {
+    font-size: 1.15rem; font-weight: 700; display: flex; align-items: center;
+    justify-content: center; gap: 10px; margin-bottom: 6px;
+  }
+  footer .footer-sub {
+    font-size: 0.8rem; opacity: 0.75; margin-bottom: 8px;
+  }
+  footer .footer-links {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; font-size: 0.78rem; opacity: 0.65;
+  }
+  footer .footer-links span {
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links a { padding: 5px 10px; font-size: 0.8rem; }
+    .weather-temp { font-size: 2.8rem; }
+    .chatbot-panel { width: calc(100vw - 48px); right: 24px; }
+  }
+
+  /* SECTION ANCHOR SCROLL */
+  html { scroll-behavior: smooth; }
+  section { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <a class="navbar-brand" href="#">
+      <div class="logo-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="38" height="38">
+<g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
+fill="#1f9860" stroke="none">
+<path d="M4711 8484 c-80 -8 -147 -18 -151 -23 -10 -17 74 -979 87 -991 9 -9
+155 7 164 18 3 4 -3 96 -14 205 -11 108 -18 199 -15 202 2 3 26 6 53 7 70 2
+77 -11 103 -193 13 -84 29 -165 35 -179 12 -24 16 -25 87 -22 41 2 79 8 84 13
+6 5 5 27 -2 56 -7 27 -21 115 -32 196 -21 155 -35 196 -75 223 l-25 16 25 30
+c35 41 39 65 32 187 -9 160 -30 212 -99 243 -51 24 -102 26 -257 12z m145
+-152 c22 -14 33 -51 40 -129 6 -74 5 -81 -17 -106 -18 -20 -35 -27 -69 -29
+l-44 -3 -7 55 c-4 30 -10 90 -13 132 l-7 77 28 4 c48 7 78 7 89 -1z"/>
+<path d="M5428 8143 c-64 -186 -139 -402 -166 -480 -59 -164 -61 -156 49 -168
+l67 -7 32 96 c25 77 35 96 48 92 10 -3 42 -8 73 -11 31 -4 61 -10 67 -14 7 -4
+12 -47 14 -106 l3 -100 55 -12 c30 -6 67 -12 81 -12 l27 -1 6 183 c15 425 21
+813 15 827 -5 11 -40 21 -116 33 -59 9 -115 17 -124 17 -12 0 -44 -82 -131
+-337z m205 15 c-2 -46 -6 -143 -9 -216 l-6 -134 -47 7 c-88 12 -86 -5 -15 208
+72 217 72 217 76 217 2 0 2 -37 1 -82z"/>
+<path d="M4055 8343 c-41 -11 -270 -105 -282 -116 -8 -9 3 -49 48 -167 33 -85
+94 -245 135 -355 136 -357 155 -405 164 -410 13 -8 141 45 147 61 3 7 -22 82
+-55 166 -33 84 -62 162 -66 174 -6 18 3 25 61 51 166 73 195 149 129 340 -61
+174 -87 217 -147 248 -27 14 -92 18 -134 8z m64 -189 c26 -33 73 -176 69 -211
+-2 -20 -14 -34 -43 -50 -22 -13 -46 -22 -54 -20 -11 1 -110 242 -111 268 0 10
+71 38 97 38 12 1 31 -10 42 -25z"/>
+<path d="M6548 8100 c-20 -11 -46 -32 -58 -47 -18 -24 -212 -346 -303 -504
+-66 -116 -58 -210 27 -294 128 -128 286 -138 378 -24 43 54 294 494 320 561
+52 137 -7 251 -160 311 -58 23 -157 22 -204 -3z m187 -165 c44 -44 49 -32
+-153 -378 -63 -109 -127 -207 -141 -218 -43 -34 -121 5 -121 61 0 27 244 464
+294 527 34 42 84 46 121 8z"/>
+<path d="M3065 7792 c-22 -20 -64 -58 -93 -83 l-53 -46 147 -229 c81 -126 161
+-247 178 -269 30 -38 30 -39 5 -20 -334 252 -481 356 -496 351 -10 -3 -51 -42
+-91 -86 -65 -71 -72 -83 -60 -98 25 -32 661 -702 666 -702 3 0 25 16 48 36 81
+65 84 55 -89 237 -203 214 -275 293 -257 282 8 -5 56 -39 105 -76 50 -36 156
+-114 238 -173 l147 -107 30 21 c16 11 39 34 51 51 l21 30 -50 77 c-41 64 -181
+291 -264 430 -11 17 -18 32 -15 32 3 0 70 -73 150 -162 80 -90 174 -194 210
+-232 73 -78 73 -78 146 -3 40 42 42 47 29 66 -8 11 -84 96 -169 188 -172 187
+-312 341 -408 451 -35 39 -69 72 -75 72 -6 0 -29 -17 -51 -38z"/>
+<path d="M6945 7369 c-190 -188 -345 -347 -345 -354 0 -7 28 -37 61 -66 l62
+-53 138 142 c75 78 142 142 147 142 14 0 72 -68 72 -85 0 -36 -29 -77 -130
+-180 -61 -62 -110 -119 -110 -127 0 -7 27 -40 61 -73 l61 -60 26 35 c15 19 59
+70 97 113 39 43 87 99 107 124 39 47 63 109 52 137 -5 13 1 16 32 16 58 0 116
+34 189 112 101 106 125 180 90 265 -19 45 -222 253 -247 253 -11 0 -164 -144
+-363 -341z m435 61 c20 -38 11 -65 -37 -111 -66 -63 -102 -89 -124 -89 -21 0
+-89 56 -89 74 0 7 40 52 90 100 l89 88 31 -22 c16 -12 35 -30 40 -40z"/>
+<path d="M7560 6894 c-414 -247 -520 -314 -520 -327 0 -15 189 -347 198 -347
+13 0 115 65 119 75 2 6 -22 53 -52 104 -38 65 -52 98 -45 105 5 5 157 99 337
+207 180 108 331 203 336 211 7 10 -3 34 -33 81 -23 37 -43 67 -44 67 -1 0
+-134 -79 -296 -176z"/>
+<path d="M2327 6978 c-43 -71 -129 -221 -156 -272 -36 -69 -36 -70 52 -119
+627 -345 760 -417 775 -417 12 0 43 48 104 158 48 86 88 163 90 171 2 8 -22
+28 -56 49 l-59 35 -18 -22 c-9 -11 -36 -55 -58 -96 -23 -41 -45 -75 -49 -75
+-7 0 -174 90 -218 117 -18 12 -17 16 28 104 32 62 44 96 38 104 -5 6 -32 24
+-58 38 -58 32 -57 32 -116 -75 -21 -37 -42 -70 -47 -74 -9 -5 -163 71 -202
+100 -16 12 -13 20 38 107 30 52 55 102 55 111 0 16 -94 78 -118 78 -7 0 -18
+-10 -25 -22z"/>
+<path d="M4095 6628 c-7 -67 -84 -948 -135 -1562 -23 -274 -44 -474 -51 -482
+-22 -27 -245 -149 -366 -201 -445 -191 -823 -192 -1193 -2 -226 115 -417 328
+-516 571 l-34 83 0 -151 c0 -191 14 -331 50 -514 78 -388 230 -761 438 -1075
+114 -172 190 -271 329 -428 110 -124 297 -294 453 -413 41 -31 82 -61 90 -67
+48 -34 -29 31 -132 112 -65 51 -118 94 -118 96 0 2 24 -7 53 -19 248 -110 538
+-134 799 -67 136 35 215 65 503 189 226 97 381 150 540 184 85 19 132 22 315
+22 186 0 229 -3 320 -22 170 -37 315 -86 559 -192 416 -180 547 -215 801 -214
+212 1 289 17 495 109 l60 26 -45 -41 c-25 -23 -11 -15 30 19 92 74 305 287
+400 401 82 98 244 334 319 465 123 214 206 420 295 736 51 182 85 427 92 664
+l5 190 -24 -60 c-154 -384 -457 -637 -872 -727 -101 -22 -380 -16 -501 10
+-132 28 -281 81 -419 146 -112 54 -295 160 -306 179 -4 5 -10 46 -13 91 -43
+549 -151 1851 -162 1944 l-5 52 -218 0 -218 0 -6 -72 c-11 -132 -66 -759 -87
+-988 -11 -124 -33 -385 -50 -580 -32 -375 -40 -453 -47 -447 -4 4 -32 307 -58
+637 -9 102 -31 365 -50 585 -19 220 -41 488 -50 595 -8 107 -18 212 -21 233
+l-6 37 -217 0 -217 0 -37 -452 c-87 -1056 -140 -1638 -148 -1638 -4 0 -10 39
+-14 88 -3 48 -20 236 -36 417 -16 182 -51 591 -79 910 -27 319 -53 601 -56
+628 l-6 47 -213 0 -214 0 -6 -52z m4322 -1740 c-3 -8 -6 -5 -6 6 -1 11 2 17 5
+13 3 -3 4 -12 1 -19z m-132 -339 c-35 -69 -36 -73 -19 -86 10 -7 14 -13 10
+-13 -5 0 -3 -7 4 -15 7 -8 17 -12 23 -8 6 3 7 1 3 -5 -9 -15 -34 -4 -41 19 -4
+10 -12 19 -18 19 -14 0 -63 -77 -59 -92 1 -5 -2 -7 -7 -4 -5 3 -12 -2 -16 -12
+-3 -9 -5 -18 -3 -19 2 0 -10 -11 -25 -23 -16 -13 -26 -29 -23 -36 3 -8 2 -13
+-2 -11 -4 1 -50 -41 -102 -93 -94 -95 -197 -178 -271 -220 -61 -34 -45 -17 22
+25 83 51 225 172 287 242 77 89 176 235 223 327 24 47 45 83 47 81 2 -1 -13
+-36 -33 -76z m127 -1 c-5 -31 -5 -32 -14 -8 -7 20 0 36 18 40 0 0 -2 -14 -4
+-32z m-6422 -33 c14 -19 14 -19 -2 -6 -10 7 -18 18 -18 24 0 6 1 8 3 6 1 -2 9
+-13 17 -24z m23 -38 c3 -8 -1 -14 -8 -14 -7 0 -11 6 -8 14 3 7 6 13 8 13 2 0
+5 -6 8 -13z m6355 -51 c-3 -27 -1 -33 12 -28 13 5 13 3 2 -11 -8 -9 -11 -21
+-7 -26 3 -6 -3 -19 -15 -31 -11 -11 -20 -23 -20 -26 0 -3 -8 -16 -19 -29 l-18
+-24 -11 24 c-10 21 -9 23 12 19 19 -3 25 1 30 21 4 14 11 23 16 20 6 -3 10 2
+10 11 0 10 -3 14 -7 11 -3 -4 -12 -2 -19 4 -8 7 -14 6 -20 -2 -4 -8 -3 -9 4
+-5 7 4 12 2 12 -3 0 -6 -7 -11 -16 -11 -11 0 -14 5 -10 16 3 9 6 22 6 29 0 8
+7 11 20 8 15 -4 20 0 20 15 0 17 -18 33 -42 36 -3 1 -10 5 -15 10 -4 5 -3 6 4
+2 6 -3 14 -2 18 4 3 5 14 10 23 9 14 0 14 -2 -2 -8 -14 -5 -16 -10 -8 -15 16
+-10 32 1 33 22 0 11 2 13 6 4 3 -7 3 -28 1 -46z m-6328 4 c6 -11 8 -20 6 -20
+-3 0 -10 9 -16 20 -6 11 -8 20 -6 20 3 0 10 -9 16 -20z m6217 -62 c-3 -7 -5
+-2 -5 12 0 14 2 19 5 13 2 -7 2 -19 0 -25z m-33 -18 c3 0 3 9 1 20 -5 27 11
+17 18 -11 3 -11 3 -18 0 -15 -4 3 -13 0 -21 -6 -8 -7 -20 -13 -28 -14 -16 -3
+-19 12 -4 21 6 3 10 16 11 28 l0 22 9 -22 c5 -13 11 -23 14 -23z m-3001 -7
+c-7 -2 -19 -2 -25 0 -7 3 -2 5 12 5 14 0 19 -2 13 -5z m50 0 c-7 -2 -19 -2
+-25 0 -7 3 -2 5 12 5 14 0 19 -2 13 -5z m114 -9 c-3 -3 -12 -4 -19 -1 -8 3 -5
+6 6 6 11 1 17 -2 13 -5z m70 -10 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17
+-2 13 -5z m2737 -51 c-3 -12 -12 -24 -19 -27 -9 -3 -11 2 -8 15 4 15 2 18 -11
+13 -9 -3 -16 -1 -16 4 0 6 12 12 28 14 34 4 32 6 26 -19z m40 12 c-4 -8 -8
+-15 -10 -15 -2 0 -4 7 -4 15 0 8 4 15 10 15 5 0 7 -7 4 -15z m-4 -35 c0 -5 -5
+-10 -11 -10 -5 0 -7 5 -4 10 3 6 8 10 11 10 2 0 4 -4 4 -10z m-2356 -35 c44
+-16 75 -30 69 -32 -10 -4 -163 54 -173 64 -6 7 -1 6 104 -32z m2276 31 c0 -3
+-4 -8 -10 -11 -5 -3 -10 -1 -10 4 0 6 5 11 10 11 6 0 10 -2 10 -4z m-3764 -33
+c-3 -4 2 -12 13 -18 19 -10 19 -10 -5 -22 -21 -10 -24 -9 -24 9 0 21 -15 20
+-78 -9 -18 -9 -35 -13 -38 -11 -3 3 23 17 58 31 64 26 87 33 74 20z m109 -11
+c-3 -3 -11 0 -18 7 -9 10 -8 11 6 5 10 -3 15 -9 12 -12z m3646 -9 c-8 -15 -10
+-15 -11 -2 0 17 10 32 18 25 2 -3 -1 -13 -7 -23z m-3688 10 c-7 -2 -19 -2 -25
+0 -7 3 -2 5 12 5 14 0 19 -2 13 -5z m800 -8 c-1 -6 -14 -11 -28 -13 -14 -2
+-23 -8 -20 -13 3 -5 -1 -6 -9 -3 -19 7 -21 30 -3 37 21 8 62 2 60 -8z m2929
+-17 c-7 -7 -12 -8 -12 -2 0 14 12 26 19 19 2 -3 -1 -11 -7 -17z m-3708 -4 c5
+-13 3 -14 -6 -7 -7 6 -20 13 -28 16 -10 4 -8 6 6 6 12 1 25 -6 28 -15z m3796
+12 c0 -2 -8 -10 -17 -17 -16 -13 -17 -12 -4 4 13 16 21 21 21 13z m-5985 -56
+c27 -27 47 -50 44 -50 -3 0 -27 23 -54 50 -27 28 -47 50 -44 50 3 0 27 -22 54
+-50z m6045 25 c0 -17 -5 -25 -17 -24 -11 0 -13 3 -5 6 6 2 12 13 12 24 0 10 2
+19 5 19 3 0 5 -11 5 -25z m-2310 0 c14 -8 21 -14 15 -14 -5 0 -21 6 -35 14
+-14 8 -20 14 -15 14 6 0 21 -6 35 -14z m-1810 -13 c0 -8 -61 -38 -72 -34 -5 1
+-8 -4 -8 -12 0 -10 -7 -12 -22 -8 -20 5 -14 10 37 33 70 33 65 31 65 21z
+m1875 -20 c-3 -3 -11 0 -18 7 -9 10 -8 11 6 5 10 -3 15 -9 12 -12z m-1877 -22
+c-7 -11 -15 -15 -17 -9 -2 6 3 15 10 20 20 12 21 11 7 -11z m4056 -26 c3 -8 2
+-12 -4 -9 -6 3 -10 10 -10 16 0 14 7 11 14 -7z m-2524 -4 c0 -5 -5 -10 -11
+-10 -5 0 -7 5 -4 10 3 6 8 10 11 10 2 0 4 -4 4 -10z m484 -7 c19 -9 32 -21 29
+-26 -3 -6 -1 -7 5 -3 6 4 28 -3 49 -14 21 -12 29 -18 18 -14 -46 15 -67 16
+-76 3 -6 -10 -9 -7 -9 12 0 19 -9 30 -32 42 -18 8 -30 16 -26 16 4 1 23 -6 42
+-16z m2086 13 c0 -14 -21 -58 -26 -54 -8 8 7 58 17 58 5 0 9 -2 9 -4z m-5900
+-53 c0 -8 -38 17 -51 33 -9 11 -2 9 19 -6 17 -13 32 -25 32 -27z m5857 21 c-3
+-3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m-3817 -14 c0 -5 -2 -10 -4
+-10 -3 0 -8 5 -11 10 -3 6 -1 10 4 10 6 0 11 -4 11 -10z m1225 -20 c-3 -5 -14
+-10 -23 -9 -14 0 -13 2 3 9 27 11 27 11 20 0z m-1584 -43 c-10 -9 -11 -8 -5 6
+3 10 9 15 12 12 3 -3 0 -11 -7 -18z m2339 -2 c14 -8 21 -14 15 -14 -5 0 -21 6
+-35 14 -14 8 -20 14 -15 14 6 0 21 -6 35 -14z m100 -45 c8 -5 11 -10 5 -10 -5
+0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z m1155 0 c-3 -5 -12 -10
+-18 -10 -7 0 -6 4 3 10 19 12 23 12 15 0z m-5060 -28 c-3 -3 -11 0 -18 7 -9
+10 -8 11 6 5 10 -3 15 -9 12 -12z m2555 -5 c45 -2 26 -3 -45 -3 -66 -1 -103 1
+-82 3 20 2 37 10 37 16 0 9 2 9 8 0 4 -7 39 -13 82 -16z m1492 -17 c46 -16 76
+-29 67 -29 -9 -1 -33 6 -52 14 -47 19 -57 19 -58 -2 0 -12 -2 -13 -6 -5 -4 10
+-8 10 -21 0 -13 -12 -14 -10 -3 9 10 21 9 24 -21 38 -44 20 -8 10 94 -25z
+m1548 36 c0 -2 -8 -10 -17 -17 -16 -13 -17 -12 -4 4 13 16 21 21 21 13z m-590
+-12 c0 -6 -65 -34 -77 -33 -4 0 10 9 32 20 45 21 45 21 45 13z m-2280 -20 c0
+-2 -21 -4 -46 -4 -25 0 -43 4 -40 8 4 7 86 4 86 -4z m-3279 -11 c13 -16 12
+-17 -3 -4 -10 7 -18 15 -18 17 0 8 8 3 21 -13z m2902 10 c-13 -2 -35 -2 -50 0
+-16 2 -5 4 22 4 28 0 40 -2 28 -4z m1597 -3 c0 -5 -5 -10 -11 -10 -5 0 -7 5
+-4 10 3 6 8 10 11 10 2 0 4 -4 4 -10z m-1681 -4 c-2 -2 -29 -6 -59 -9 -36 -4
+-46 -3 -30 3 25 8 97 13 89 6z m519 -3 c-10 -2 -26 -2 -35 0 -10 3 -2 5 17 5
+19 0 27 -2 18 -5z m2782 3 c0 -2 -8 -10 -17 -17 -16 -13 -17 -12 -4 4 13 16
+21 21 21 13z m-4495 -16 c3 -5 1 -10 -4 -10 -6 0 -11 5 -11 10 0 6 2 10 4 10
+3 0 8 -4 11 -10z m3830 0 c-3 -5 -14 -10 -23 -10 -15 0 -15 2 -2 10 20 13 33
+13 25 0z m-3998 -6 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z
+m1980 0 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m-842 -20 c-27
+-7 -54 -13 -60 -13 -17 2 69 27 90 27 11 0 -2 -6 -30 -14z m2125 6 c0 -5 -7
+-7 -15 -4 -8 4 -15 8 -15 10 0 2 7 4 15 4 8 0 15 -4 15 -10z m650 -6 c-25 -8
+-65 -17 -90 -19 -36 -4 -32 -2 19 10 35 8 69 16 75 19 6 2 18 4 26 4 8 0 -5
+-6 -30 -14z m-5260 -81 c0 -8 -9 0 -50 45 l-45 47 48 -45 c26 -24 47 -45 47
+-47z m5980 84 c0 -1 -39 -41 -87 -87 -49 -47 -66 -62 -40 -34 26 27 44 54 40
+59 -5 4 -3 5 3 2 6 -3 26 9 44 28 31 32 40 39 40 32z m-1287 -14 c-7 -2 -19
+-2 -25 0 -7 3 -2 5 12 5 14 0 19 -2 13 -5z m-2286 -9 c-3 -3 -12 -4 -19 -1 -8
+3 -5 6 6 6 11 1 17 -2 13 -5z m2346 -1 c-7 -2 -19 -2 -25 0 -7 3 -2 5 12 5 14
+0 19 -2 13 -5z m-3666 -9 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13
+-5z m3751 -1 c-10 -2 -26 -2 -35 0 -10 3 -2 5 17 5 19 0 27 -2 18 -5z m270 0
+c-10 -2 -28 -2 -40 0 -13 2 -5 4 17 4 22 1 32 -1 23 -4z m-4111 -9 c-3 -3 -12
+-4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m3996 -1 c-18 -2 -48 -2 -65 0 -18
+2 -4 4 32 4 36 0 50 -2 33 -4z m-2813 -53 c-8 -5 -19 -10 -25 -10 -5 0 -3 5 5
+10 8 5 20 10 25 10 6 0 3 -5 -5 -10z m-2125 -40 c21 -22 37 -40 34 -40 -3 0
+-23 18 -44 40 -21 22 -37 40 -34 40 3 0 23 -18 44 -40z m3695 30 c8 -5 11 -10
+5 -10 -5 0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z m75 -31 c5 -5
+-5 -4 -23 2 -17 6 -32 13 -32 16 0 7 43 -8 55 -18z m-1815 -29 c-8 -5 -19 -10
+-25 -10 -5 0 -3 5 5 10 8 5 20 10 25 10 6 0 3 -5 -5 -10z m-490 -10 c0 -5 -5
+-10 -11 -10 -5 0 -7 5 -4 10 3 6 8 10 11 10 2 0 4 -4 4 -10z m-1399 -17 c13
+-16 12 -17 -3 -4 -17 13 -22 21 -14 21 2 0 10 -8 17 -17z m3819 7 c8 -5 11
+-10 5 -10 -5 0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z m1850 6 c0
+-2 -17 -16 -37 -31 l-38 -26 35 30 c34 31 40 35 40 27z m-5629 -43 c13 -16 12
+-17 -3 -4 -17 13 -22 21 -14 21 2 0 10 -8 17 -17z m3889 -13 c8 -5 11 -10 5
+-10 -5 0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z m-2493 -42 c-3 -8
+-6 -5 -6 6 -1 11 2 17 5 13 3 -3 4 -12 1 -19z m-1277 -24 c0 -2 -9 0 -20 6
+-11 6 -20 13 -20 16 0 2 9 0 20 -6 11 -6 20 -13 20 -16z m5370 21 c0 -2 -10
+-10 -22 -16 -21 -11 -22 -11 -9 4 13 16 31 23 31 12z m-3950 -25 c-8 -5 -19
+-10 -25 -10 -5 0 -3 5 5 10 8 5 20 10 25 10 6 0 3 -5 -5 -10z m2530 -10 c8 -5
+11 -10 5 -10 -5 0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z m1370 5
+c0 -6 -97 -55 -107 -55 -4 1 17 14 47 30 61 32 60 32 60 25z m-3950 -15 c-8
+-5 -19 -10 -25 -10 -5 0 -3 5 5 10 8 5 20 10 25 10 6 0 3 -5 -5 -10z m-1280
+-26 c0 -2 -9 0 -20 6 -11 6 -20 13 -20 16 0 2 9 0 20 -6 11 -6 20 -13 20 -16z
+m1220 2 c-33 -18 -77 -31 -67 -20 8 9 65 31 82 32 6 1 -1 -5 -15 -12z m2710 4
+c8 -5 11 -10 5 -10 -5 0 -17 5 -25 10 -8 5 -10 10 -5 10 6 0 17 -5 25 -10z
+m-2806 -43 c-9 -5 -18 -6 -21 -3 -4 3 -1 6 7 6 10 0 10 3 -1 17 -13 15 -12 15
+8 2 19 -11 20 -15 7 -22z m2861 23 c8 -13 -5 -13 -25 0 -13 8 -13 10 2 10 9 0
+20 -4 23 -10z m-2895 -31 c0 -5 -8 -9 -17 -8 -11 0 -13 3 -5 6 6 2 9 10 6 15
+-4 7 -2 8 4 4 7 -4 12 -11 12 -17z m3920 13 c0 -5 -7 -9 -15 -9 -8 0 -12 4 -9
+9 3 4 9 8 15 8 5 0 9 -4 9 -8z m70 -2 c-8 -5 -19 -10 -25 -10 -5 0 -3 5 5 10
+8 5 20 10 25 10 6 0 3 -5 -5 -10z m-1010 -10 c18 -12 2 -12 -25 0 -13 6 -15 9
+-5 9 8 0 22 -4 30 -9z m-3925 -10 c3 -6 -1 -7 -9 -4 -18 7 -21 14 -7 14 6 0
+13 -4 16 -10z m905 0 c0 -5 -5 -10 -11 -10 -5 0 -7 5 -4 10 3 6 8 10 11 10 2
+0 4 -4 4 -10z m3055 0 c3 -5 1 -10 -4 -10 -6 0 -11 5 -11 10 0 6 2 10 4 10 3
+0 8 -4 11 -10z m42 -16 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z
+m818 -4 c-27 -12 -43 -12 -25 0 8 5 22 9 30 9 10 0 8 -3 -5 -9z m-738 -16 c-3
+-3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m50 -10 c-3 -3 -12 -4 -19
+-1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m590 0 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6
+6 11 1 17 -2 13 -5z m-4504 -11 c-7 -2 -19 -2 -25 0 -7 3 -2 5 12 5 14 0 19
+-2 13 -5z m484 1 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m3480
+0 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m433 -4 c0 -5 -12
+-10 -27 -9 l-28 1 25 8 c14 4 26 8 28 9 1 1 2 -3 2 -9z m53 3 c-7 -2 -21 -2
+-30 0 -10 3 -4 5 12 5 17 0 24 -2 18 -5z m-4046 -9 c-3 -3 -12 -4 -19 -1 -8 3
+-5 6 6 6 11 1 17 -2 13 -5z m3626 -1 c-7 -2 -19 -2 -25 0 -7 3 -2 5 12 5 14 0
+19 -2 13 -5z m-3855 -10 c-10 -2 -26 -2 -35 0 -10 3 -2 5 17 5 19 0 27 -2 18
+-5z m49 1 c-3 -3 -12 -4 -19 -1 -8 3 -5 6 6 6 11 1 17 -2 13 -5z m4056 -1
+c-29 -2 -77 -2 -105 0 -29 2 -6 3 52 3 58 0 81 -1 53 -3z"/>
+<path d="M8200 4339 c0 -5 5 -7 10 -4 6 3 10 8 10 11 0 2 -4 4 -10 4 -5 0 -10
+-5 -10 -11z"/>
+<path d="M2032 6347 c-6 -6 -22 -39 -37 -72 -23 -53 -24 -61 -10 -71 8 -6 142
+-69 298 -139 155 -71 286 -132 291 -136 5 -5 -6 -6 -25 -3 -65 9 -544 63 -589
+66 l-45 3 -12 -75 c-13 -85 -5 -100 51 -100 17 0 220 -20 451 -45 231 -25 427
+-44 435 -43 21 4 82 209 67 224 -7 7 -192 94 -412 194 -220 100 -412 189 -426
+196 -21 11 -29 11 -37 1z"/>
+<path d="M8178 6319 c-49 -11 -299 -51 -630 -99 -150 -22 -276 -44 -280 -48
+-10 -10 28 -130 47 -150 10 -11 26 -11 95 2 45 9 88 16 95 16 14 0 55 -97 55
+-128 0 -13 -28 -31 -90 -62 -55 -27 -90 -50 -90 -60 0 -18 38 -122 49 -133 11
+-11 881 421 877 436 -3 6 -14 55 -27 107 -32 139 -30 136 -101 119z m-306
+-275 c-85 -41 -158 -72 -162 -69 -7 4 -42 94 -37 96 1 0 65 11 142 24 230 38
+233 35 57 -51z"/>
+<path d="M7234 2508 l-19 -23 23 19 c12 11 22 21 22 23 0 8 -8 2 -26 -19z"/>
+<path d="M7170 2459 c-35 -31 -35 -31 -3 -9 18 11 35 25 38 30 10 16 2 11 -35
+-21z"/>
+<path d="M4988 2443 c6 -2 18 -2 25 0 6 3 1 5 -13 5 -14 0 -19 -2 -12 -5z"/>
+<path d="M7109 2413 c-13 -16 -12 -17 4 -4 16 13 21 21 13 21 -2 0 -10 -8 -17
+-17z"/>
+<path d="M7036 2365 c-27 -18 -54 -39 -60 -46 -6 -6 17 7 52 30 34 23 62 44
+62 46 0 7 -1 7 -54 -30z"/>
+<path d="M3229 2342 c14 -11 38 -27 55 -37 l31 -17 -24 20 c-14 11 -38 27 -55
+37 l-31 17 24 -20z"/>
+<path d="M6934 2294 c-18 -14 -18 -15 4 -4 12 6 22 13 22 15 0 8 -5 6 -26 -11z"/>
+<path d="M6884 2264 c-18 -14 -18 -15 4 -4 12 6 22 13 22 15 0 8 -5 6 -26 -11z"/>
+<path d="M3350 2266 c0 -3 9 -10 20 -16 11 -6 20 -8 20 -6 0 3 -9 10 -20 16
+-11 6 -20 8 -20 6z"/>
+<path d="M3420 2226 c0 -3 14 -12 30 -21 17 -9 30 -13 30 -11 0 3 -13 12 -30
+21 -16 9 -30 13 -30 11z"/>
+<path d="M6764 2194 c-18 -14 -18 -15 4 -4 12 6 22 13 22 15 0 8 -5 6 -26 -11z"/>
+<path d="M3497 2179 c7 -7 15 -10 18 -7 3 3 -2 9 -12 12 -14 6 -15 5 -6 -5z"/>
+<path d="M3728 2123 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"/>
+<path d="M3893 2123 c9 -2 23 -2 30 0 6 3 -1 5 -18 5 -16 0 -22 -2 -12 -5z"/>
+</g>
+</svg>
+      </div>
+      <span>Vem Pra Orla</span>
+    </a>
+    
+  </div>
+</nav>
+
+<div class="container py-3">
+
+  <!-- ══════════════════════════════════════
+       SEÇÃO 1: CLIMA DE PORTO ALEGRE
+  ══════════════════════════════════════ -->
+  <section id="clima" class="section">
+    <div class="section-title">
+      <i class="bi bi-cloud-sun-fill"></i>
+      Clima em Porto Alegre
+    </div>
+
+    <div class="row g-3 mb-3">
+      <!-- Card principal de clima -->
+      <div class="col-md-5">
+        <div class="weather-main h-100">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="weather-desc">Porto Alegre • Orla do Guaíba</div>
+              <div class="weather-temp" id="tempAtual">27°C</div>
+              <div class="weather-meta mt-2">
+                <i class="bi bi-droplet-half"></i> Umidade: <span id="umidadeAtual">68%</span> &nbsp;
+                <i class="bi bi-wind"></i> Vento: <span id="ventoAtual">14 km/h</span>
+              </div>
+              <div class="weather-meta mt-1">
+                <i class="bi bi-arrow-down"></i> Mín: 21°C &nbsp;
+                <i class="bi bi-arrow-up"></i> Máx: 30°C
+              </div>
+            </div>
+            <div style="font-size:3.8rem; opacity:0.9;" id="iconeClima"><i class="bi bi-cloud-sun" style="font-size:1.5rem;color:#1f9860;"></i></div>
+          </div>
+          <div class="mt-2" style="font-size:1rem; font-weight:600; opacity:0.9;" id="descClima">
+            Parcialmente nublado
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas rápidas -->
+      <div class="col-md-7">
+        <div class="row g-3 h-100">
+          <div class="col-6">
+            <div class="metric-card h-100">
+              <div class="metric-icon bg-teal-light"><i class="bi bi-thermometer-half"></i></div>
+              <div class="metric-value" id="sensTermica">25°C</div>
+              <div class="metric-label">Sensação Térmica</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="metric-card h-100">
+              <div class="metric-icon bg-green-light"><i class="bi bi-sun-fill"></i></div>
+              <div class="metric-value" id="uvIndex">6</div>
+              <div class="metric-label">Índice UV</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="metric-card h-100">
+              <div class="metric-icon bg-amber-light"><i class="bi bi-cloud-rain-fill"></i></div>
+              <div class="metric-value" id="chuvaPrev">20%</div>
+              <div class="metric-label">Chuva (probabilidade)</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="metric-card h-100">
+              <div class="metric-icon bg-green2-light"><i class="bi bi-eye-fill"></i></div>
+              <div class="metric-value" id="visib">10km</div>
+              <div class="metric-label">Visibilidade</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Previsão dos próximos dias -->
+    <div class="card-custom mb-3">
+      <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.05em;">
+        <i class="bi bi-calendar3"></i> &nbsp; Próximos 5 dias
+      </div>
+      <div class="row g-2">
+        <div class="col"><div class="forecast-card">
+          <div class="forecast-day">Hoje</div>
+          <div class="forecast-icon"><i class="bi bi-cloud-sun" style="font-size:1.5rem;color:#1f9860;"></i></div>
+          <div class="forecast-temp">27°C</div>
+          <div class="forecast-desc">P. nublado</div>
+        </div></div>
+        <div class="col"><div class="forecast-card">
+          <div class="forecast-day">Seg</div>
+          <div class="forecast-icon"><i class="bi bi-cloud-rain-heavy" style="font-size:1.5rem;color:#1F9498;"></i></div>
+          <div class="forecast-temp">23°C</div>
+          <div class="forecast-desc">Chuva</div>
+        </div></div>
+        <div class="col"><div class="forecast-card">
+          <div class="forecast-day">Ter</div>
+          <div class="forecast-icon"><i class="bi bi-cloud-drizzle" style="font-size:1.5rem;color:#1F9498;"></i></div>
+          <div class="forecast-temp">25°C</div>
+          <div class="forecast-desc">P. chuvoso</div>
+        </div></div>
+        <div class="col"><div class="forecast-card">
+          <div class="forecast-day">Qua</div>
+          <div class="forecast-icon"><i class="bi bi-sun" style="font-size:1.5rem;color:#e09000;"></i></div>
+          <div class="forecast-temp">29°C</div>
+          <div class="forecast-desc">Ensolarado</div>
+        </div></div>
+        <div class="col"><div class="forecast-card">
+          <div class="forecast-day">Qui</div>
+          <div class="forecast-icon"><i class="bi bi-cloud-sun-fill" style="font-size:1.5rem;color:#1f9860;"></i></div>
+          <div class="forecast-temp">28°C</div>
+          <div class="forecast-desc">Poucas nuvens</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- Gráfico de temperatura semanal -->
+    <div class="card-custom">
+      <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.05em;">
+        <i class="bi bi-graph-up"></i> &nbsp; Temperatura da Semana (°C)
+      </div>
+      <canvas id="tempChart" height="90"></canvas>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SEÇÃO 2: ÍNDICE DE LAZER
+  ══════════════════════════════════════ -->
+  <section id="lazer" class="section">
+    <div class="section-title">
+      <i class="bi bi-bicycle"></i>
+      Condições de Lazer da Orla
+    </div>
+
+    <div class="row g-3 mb-3">
+      <!-- Score de lazer -->
+      <div class="col-md-4">
+        <div class="card-custom text-center">
+          <div class="leisure-score-wrap">
+            <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">
+              Índice de Lazer
+            </div>
+            <div class="leisure-score">4<span style="font-size:1.8rem; color:var(--text-muted)">/5</span></div>
+            <div style="margin-top:8px;">
+              <span style="background:var(--primary-light); color:var(--primary); font-size:0.85rem; font-weight:700; padding:4px 14px; border-radius:20px;">
+                <i class="bi bi-emoji-smile-fill"></i> Condições boas
+              </span>
+            </div>
+            <div class="progress-leisure mt-3">
+              <div class="progress-leisure-fill" style="width:80%;"></div>
+            </div>
+            <div class="leisure-score-sub mt-2">Baseado em clima e ocorrências</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fatores analisados -->
+      <div class="col-md-8">
+        <div class="card-custom h-100">
+          <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">
+            <i class="bi bi-clipboard-data"></i> &nbsp; Fatores analisados
+          </div>
+          <div class="factor-badge">
+            <i class="bi bi-thermometer-half" style="font-size:1.1rem;"></i>
+            <span><strong>Temperatura agradável</strong> — 27°C, ideal para atividades ao ar livre</span>
+          </div>
+          <div class="factor-badge">
+            <i class="bi bi-wind" style="font-size:1.1rem;"></i>
+            <span><strong>Vento moderado</strong> — 14 km/h, sem impacto significativo</span>
+          </div>
+          <div class="factor-badge" style="background:var(--teal-light); --bs-border-color: var(--teal);">
+            <i class="bi bi-cloud-sun" style="font-size:1.1rem; color:var(--teal);"></i>
+            <span><strong>Céu parcialmente nublado</strong> — Boa cobertura solar</span>
+          </div>
+          <div class="factor-badge" style="background:#fff8e8;">
+            <i class="bi bi-exclamation-triangle" style="font-size:1.1rem; color:#b07005;"></i>
+            <span><strong>2 ocorrências recentes</strong> — Lixo acumulado no Gasômetro</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atividades recomendadas -->
+    <div class="card-custom">
+      <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px;">
+        <i class="bi bi-person-walking"></i> &nbsp; Atividades recomendadas hoje
+      </div>
+      <div class="row g-2">
+        <div class="col-6 col-md-3">
+          <div class="activity-pill">
+            <div class="activity-emoji"><i class="bi bi-person-walking" style="font-size:1.7rem;color:#1f9860;"></i></div>
+            <div class="activity-name">Caminhada</div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:3px;">Boa temperatura</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="activity-pill">
+            <div class="activity-emoji"><i class="bi bi-person-fill-up" style="font-size:1.7rem;color:#1F9823;"></i></div>
+            <div class="activity-name">Corrida</div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:3px;">Condições favoráveis</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="activity-pill">
+            <div class="activity-emoji"><i class="bi bi-bicycle" style="font-size:1.7rem;color:#1F9498;"></i></div>
+            <div class="activity-name">Bicicleta</div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:3px;">Ciclovia livre</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="activity-pill">
+            <div class="activity-emoji"><i class="bi bi-sunset" style="font-size:1.7rem;color:#e09000;"></i></div>
+            <div class="activity-name">Pôr do sol</div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:3px;">Vista panorâmica</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SEÇÃO 3: OCORRÊNCIAS
+  ══════════════════════════════════════ -->
+  <section id="ocorrencias" class="section">
+    <div class="section-title">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      Ocorrências na Orla
+    </div>
+    <p style="font-size:0.87rem; color:var(--text-muted); margin-bottom:1.2rem;">
+      Como no Waze, registre situações que você observou na orla e que podem impactar o lazer e o meio ambiente.
+    </p>
+
+    <div class="row g-3">
+      <!-- Formulário de registro -->
+      <div class="col-md-7">
+        <div class="card-custom">
+          <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px;">
+            <i class="bi bi-geo-alt-fill"></i> &nbsp; Registrar nova ocorrência
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tipo de ocorrência</label>
+            <select class="form-select" id="tipoOcorrencia">
+              <option><i class="bi bi-trash3-fill" style="font-size:1.3rem;color:#b91c1c;"></i> Muito lixo acumulado</option>
+              <option><i class="bi bi-exclamation-circle-fill" style="font-size:1.3rem;color:#b91c1c;"></i> Animal morto</option>
+              <option><i class="bi bi-water" style="font-size:1.1rem;"></i> Água com aparência estranha</option>
+              <option><i class="bi bi-volume-up-fill" style="font-size:1.3rem;color:#b07005;"></i> Poluição sonora</option>
+              <option><i class="bi bi-tree-fill" style="font-size:1.3rem;color:#1F9823;"></i> Vegetação obstruindo passagem</option>
+              <option><i class="bi bi-exclamation-triangle-fill" style="font-size:1.3rem;color:#b07005;"></i> Outro problema ambiental</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Local aproximado</label>
+            <input type="text" class="form-control" placeholder="Ex: próximo ao Gasômetro" id="localOcorrencia">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" rows="3" placeholder="Descreva o que você observou..." id="descOcorrencia"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nível de impacto</label>
+            <select class="form-select" id="impactoOcorrencia">
+              <option value="baixo">Baixo</option>
+              <option value="medio" selected>Médio</option>
+              <option value="alto">Alto</option>
+            </select>
+          </div>
+
+          <button class="btn-primary-custom" onclick="registrarOcorrencia()">
+            <i class="bi bi-send-fill"></i> Enviar ocorrência
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de ocorrências -->
+      <div class="col-md-5">
+        <div class="card-custom h-100">
+          <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px;">
+            <i class="bi bi-clock-history"></i> &nbsp; Ocorrências recentes
+          </div>
+
+          <div id="listaOcorrencias">
+            <div class="occurrence-item">
+              <div class="occurrence-icon-wrap high"><i class="bi bi-trash3-fill"></i></div>
+              <div class="occurrence-body">
+                <div class="occurrence-row-top">
+                  <span class="occurrence-text">Muito lixo acumulado</span>
+                  <span class="badge-impact badge-high">Alta</span>
+                </div>
+                <div class="occurrence-meta"><i class="bi bi-geo-alt-fill"></i> Gasômetro &nbsp;•&nbsp; Hoje, 10:15</div>
+              </div>
+            </div>
+            <div class="occurrence-item">
+              <div class="occurrence-icon-wrap high"><i class="bi bi-exclamation-circle-fill"></i></div>
+              <div class="occurrence-body">
+                <div class="occurrence-row-top">
+                  <span class="occurrence-text">Animal morto encontrado</span>
+                  <span class="badge-impact badge-high">Alta</span>
+                </div>
+                <div class="occurrence-meta"><i class="bi bi-geo-alt-fill"></i> Orla Moacyr Scliar &nbsp;•&nbsp; Hoje, 09:20</div>
+              </div>
+            </div>
+            <div class="occurrence-item">
+              <div class="occurrence-icon-wrap medium"><i class="bi bi-water"></i></div>
+              <div class="occurrence-body">
+                <div class="occurrence-row-top">
+                  <span class="occurrence-text">Água com cor incomum</span>
+                  <span class="badge-impact badge-medium">Média</span>
+                </div>
+                <div class="occurrence-meta"><i class="bi bi-geo-alt-fill"></i> Usina do Gasômetro &nbsp;•&nbsp; Ontem</div>
+              </div>
+            </div>
+            <div class="occurrence-item">
+              <div class="occurrence-icon-wrap low"><i class="bi bi-volume-up-fill"></i></div>
+              <div class="occurrence-body">
+                <div class="occurrence-row-top">
+                  <span class="occurrence-text">Som alto excessivo</span>
+                  <span class="badge-impact badge-low">Baixa</span>
+                </div>
+                <div class="occurrence-meta"><i class="bi bi-geo-alt-fill"></i> Ciclovia &nbsp;•&nbsp; Ontem</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-brand">
+      <svg viewBox="0 0 40 40" width="30" height="30">
+        <circle cx="20" cy="20" r="20" fill="rgba(255,255,255,0.2)"/>
+        <path d="M0 28 Q10 22 20 28 Q30 34 40 28 L40 40 L0 40 Z" fill="rgba(255,255,255,0.3)"/>
+        <path d="M0 32 Q10 26 20 32 Q30 38 40 32 L40 40 L0 40 Z" fill="rgba(255,255,255,0.45)"/>
+        <rect x="14" y="12" width="3" height="15" rx="1" fill="white" opacity="0.9"/>
+        <rect x="18.5" y="9" width="3" height="18" rx="1" fill="white"/>
+        <rect x="23" y="11" width="3" height="16" rx="1" fill="white" opacity="0.85"/>
+      </svg>
+      Vem Pra Orla
+    </div>
+    <div class="footer-sub">
+      Monitoramento ambiental e de lazer da Orla do Guaíba &nbsp;•&nbsp; Porto Alegre, RS
+    </div>
+    <div class="footer-links">
+      <span><i class="bi bi-mortarboard-fill"></i> Projeto acadêmico</span>
+      <span><i class="bi bi-bar-chart-fill"></i> Dados simulados para demonstração</span>
+      <span><i class="bi bi-geo-alt-fill"></i> Orla do Guaíba</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CHATBOT FAB -->
+<div class="chatbot-fab">
+  <!-- Painel do chatbot (fechado por padrão) -->
+  <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-header-info">
+        <div class="chatbot-avatar"><i class="bi bi-water" style="font-size:1.1rem;"></i></div>
+        <div>
+          <div class="chatbot-title">Assistente Orla</div>
+          <div class="chatbot-status">● Online agora</div>
+        </div>
+      </div>
+      <button class="chatbot-close" onclick="fecharChat()" title="Fechar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="chatbot-messages" id="chatMsgs">
+      <div class="chat-bubble bot">
+        Olá! Sou o Assistente da Orla do Guaíba. Posso te ajudar com informações de clima, condições de lazer ou ocorrências. Como posso ajudar?
+      </div>
+    </div>
+    <div class="chatbot-input-wrap">
+      <input type="text" class="chatbot-input" id="chatInput"
+        placeholder="Digite sua mensagem..."
+        onkeypress="if(event.key==='Enter') enviarMensagem()">
+      <button class="chatbot-send" onclick="enviarMensagem()">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Botão flutuante -->
+  <button class="chatbot-btn" id="chatFab" onclick="toggleChat()" title="Assistente Virtual">
+    <i class="bi bi-chat-dots-fill" id="chatIcon"></i>
+  </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── GRÁFICO DE TEMPERATURA ──
+const ctx = document.getElementById('tempChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+    datasets: [{
+      label: 'Temperatura °C',
+      data: [24, 22, 19, 23, 27, 29, 27],
+      borderColor: '#1f9860',
+      backgroundColor: 'rgba(31,152,96,0.10)',
+      tension: 0.4,
+      fill: true,
+      pointBackgroundColor: '#1f9860',
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      borderWidth: 2.5
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => ctx.parsed.y + '°C' }
+      }
+    },
+    scales: {
+      y: {
+        min: 14, max: 34,
+        grid: { color: 'rgba(31,152,96,0.08)' },
+        ticks: { callback: v => v + '°C', color: '#5a7a6a', font: { size: 11 } }
+      },
+      x: {
+        grid: { display: false },
+        ticks: { color: '#5a7a6a', font: { size: 11 } }
+      }
+    }
+  }
+});
+
+// ── REGISTRAR OCORRÊNCIA ──
+function registrarOcorrencia() {
+  const tipo = document.getElementById('tipoOcorrencia').value;
+  const local = document.getElementById('localOcorrencia').value.trim();
+  const desc = document.getElementById('descOcorrencia').value.trim();
+  const impacto = document.getElementById('impactoOcorrencia').value;
+
+  if (!local) {
+    alert('Por favor, informe o local da ocorrência.');
+    return;
+  }
+
+  // Map tipo to icon
+  const iconMap = {
+    '️': 'bi bi-trash3-fill', '': 'bi bi-exclamation-circle-fill',
+    '': 'bi bi-water', '': 'bi bi-volume-up-fill',
+    '': 'bi bi-tree-fill', '️': 'bi bi-exclamation-triangle-fill'
+  };
+  const emoji = tipo.split(' ')[0];
+  const iconClass = iconMap[emoji] || 'bi bi-flag-fill';
+  const tipoTexto = tipo.replace(emoji, '').trim();
+  const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const badgeClass = impacto === 'alto' ? 'badge-high' : impacto === 'medio' ? 'badge-medium' : 'badge-low';
+  const badgeLabel = impacto === 'alto' ? 'Alta' : impacto === 'medio' ? 'Média' : 'Baixa';
+
+  const iconWrapClass = impacto === 'alto' ? 'high' : impacto === 'medio' ? 'medium' : 'low';
+  const item = `
+    <div class="occurrence-item" style="animation: fadeIn 0.3s ease;">
+      <div class="occurrence-icon-wrap ${iconWrapClass}"><i class="${iconClass}"></i></div>
+      <div class="occurrence-body">
+        <div class="occurrence-row-top">
+          <span class="occurrence-text">${tipoTexto}</span>
+          <span class="badge-impact ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="occurrence-meta"><i class="bi bi-geo-alt-fill"></i> ${local || 'Orla'} &nbsp;•&nbsp; Hoje, ${agora}</div>
+        ${desc ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${desc}</div>` : ''}
+      </div>
+    </div>`;
+
+  document.getElementById('listaOcorrencias').insertAdjacentHTML('afterbegin', item);
+  document.getElementById('localOcorrencia').value = '';
+  document.getElementById('descOcorrencia').value = '';
+
+  // Feedback visual
+  const btn = document.querySelector('.btn-primary-custom');
+  btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Enviado!';
+  btn.style.background = 'var(--green2)';
+  setTimeout(() => {
+    btn.innerHTML = '<i class="bi bi-send-fill"></i> Enviar ocorrência';
+    btn.style.background = '';
+  }, 2000);
+}
+
+// ── CHATBOT ──
+let chatAberto = false;
+
+function toggleChat() {
+  chatAberto = !chatAberto;
+  const panel = document.getElementById('chatbotPanel');
+  const icon = document.getElementById('chatIcon');
+  if (chatAberto) {
+    panel.classList.add('open');
+    icon.className = 'bi bi-x-lg';
+    document.getElementById('chatInput').focus();
+  } else {
+    panel.classList.remove('open');
+    icon.className = 'bi bi-chat-dots-fill';
+  }
+}
+
+function fecharChat() {
+  chatAberto = false;
+  document.getElementById('chatbotPanel').classList.remove('open');
+  document.getElementById('chatIcon').className = 'bi bi-chat-dots-fill';
+}
+
+function enviarMensagem() {
+  const input = document.getElementById('chatInput');
+  const texto = input.value.trim();
+  if (!texto) return;
+
+  adicionarMensagem(texto, 'user');
+  input.value = '';
+
+  setTimeout(() => {
+    const resp = responderBot(texto.toLowerCase());
+    adicionarMensagem(resp, 'bot');
+  }, 600);
+}
+
+function adicionarMensagem(texto, tipo) {
+  const msgs = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = `chat-bubble ${tipo}`;
+  div.textContent = texto;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function responderBot(msg) {
+  if (msg.includes('clima') || msg.includes('tempo') || msg.includes('chuva') || msg.includes('temperatura'))
+    return 'Hoje em Porto Alegre: 27°C, parcialmente nublado, umidade 68%. Chance de chuva: 20%. Previsão: chuva para segunda-feira, sol voltando na quarta!';
+  if (msg.includes('lazer') || msg.includes('atividade') || msg.includes('passeio') || msg.includes('orla'))
+    return '<i class="bi bi-bicycle" style="font-size:1.7rem;color:#1F9498;"></i> As condições para lazer hoje estão boas (4/5)! Recomendamos caminhada, corrida, bicicleta ou curtir o pôr do sol. Temperatura agradável de 27°C.';
+  if (msg.includes('ocorrência') || msg.includes('lixo') || msg.includes('problema') || msg.includes('ocorrencia'))
+    return '<i class="bi bi-exclamation-triangle-fill" style="font-size:1.3rem;color:#b07005;"></i> Há 2 ocorrências recentes: lixo acumulado perto do Gasômetro e animal morto na Orla Moacyr Scliar. Use a seção "Ocorrências" para registrar novos relatos!';
+  if (msg.includes('pôr do sol') || msg.includes('por do sol') || msg.includes('sunset'))
+    return '<i class="bi bi-sunset" style="font-size:1.7rem;color:#e09000;"></i> O pôr do sol hoje em Porto Alegre é por volta das 18h45. A visibilidade está boa (10km) — ótima para contemplar o Guaíba!';
+  if (msg.includes('uv') || msg.includes('sol') || msg.includes('protetor'))
+    return '<i class="bi bi-sun" style="font-size:1.5rem;color:#e09000;"></i> O índice UV hoje é 6 (Alto). Use protetor solar FPS 30+ se ficar mais de 30 minutos ao ar livre, especialmente entre 10h e 14h.';
+  if (msg.includes('oi') || msg.includes('olá') || msg.includes('ola') || msg.includes('bom dia') || msg.includes('boa tarde'))
+    return ' Olá! Que bom ter você por aqui! Posso te ajudar com informações de clima, condições de lazer na orla ou ocorrências ambientais. O que você gostaria de saber?';
+  return 'Entendi! Posso te ajudar com informações sobre o clima de Porto Alegre, condições de lazer na Orla do Guaíba ou ocorrências ambientais. Qual dessas informações você precisa?';
+}
+</script>
+</body>
+</html>
