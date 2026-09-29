@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Profile {
+  id                  String        @id @default(uuid()) @db.Uuid
+  telefoneWhatsapp    String?       @map("telefone_whatsapp")
+  notificacoesAtivas  Boolean       @default(true) @map("notificacoes_ativas")
+  criadoEm            DateTime      @default(now()) @map("criado_em") @db.Timestamptz(6)
+  occurrences         Occurrence[]
+
+  @@map("profiles")
+}
+
+model Occurrence {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  tipo        String
+  local       String
+  descricao   String?
+  impacto     String
+  criadoEm    DateTime @default(now()) @map("criado_em") @db.Timestamptz(6)
+  profile     Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("occurrences")
+}
