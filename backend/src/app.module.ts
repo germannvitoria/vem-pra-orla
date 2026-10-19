@@ -5,6 +5,7 @@ import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { CommonModule } from './common/common.module.js';
 import { OccurrencesModule } from './occurrences/occurrences.module.js';
+import { WeatherModule } from './weather/weather.module.js';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { OccurrencesModule } from './occurrences/occurrences.module.js';
     AuthModule,
     CommonModule,
     OccurrencesModule,
+    WeatherModule,
   ],
   controllers: [AppController],
   providers: [AppService],
