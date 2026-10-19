@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './lib/supabaseClient';
 import Occurrences from './Occurrences';
+import Dashboard from './Dashboard';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -52,6 +53,7 @@ export default function App() {
       <button onClick={testarBackend}>Testar backend (/me)</button>
       <button onClick={sair}>Sair</button>
       <pre>{resposta}</pre>
+      <Dashboard />
       <Occurrences />
     </main>
   );
