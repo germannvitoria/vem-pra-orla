@@ -4,6 +4,7 @@ import { api } from './lib/api'
 
 type Occurrence = {
   id: string
+  userId: string
   tipo: string
   local: string
   descricao: string | null
@@ -34,7 +35,7 @@ function tempoAtras(iso: string): string {
   return `há ${Math.round(h / 24)} d`
 }
 
-export default function Occurrences({ onCriada }: { onCriada: () => void }) {
+export default function Occurrences({ userId, onCriada }: { userId: string; onCriada: () => void }) {
   const [lista, setLista] = useState<Occurrence[]>([])
   const [tipo, setTipo] = useState('lixo')
   const [local, setLocal] = useState('')
@@ -42,6 +43,7 @@ export default function Occurrences({ onCriada }: { onCriada: () => void }) {
   const [impacto, setImpacto] = useState('baixo')
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
+  const [editandoId, setEditandoId] = useState<string | null>(null)
 
   async function carregar() {
     try {
@@ -55,18 +57,54 @@ export default function Occurrences({ onCriada }: { onCriada: () => void }) {
     carregar()
   }, [])
 
+  function limparForm() {
+    setEditandoId(null)
+    setTipo('lixo')
+    setLocal('')
+    setDescricao('')
+    setImpacto('baixo')
+  }
+
+  function iniciarEdicao(o: Occurrence) {
+    setEditandoId(o.id)
+    setTipo(o.tipo)
+    setLocal(o.local)
+    setDescricao(o.descricao ?? '')
+    setImpacto(o.impacto)
+    setErro('')
+    document.getElementById('ocorrencias')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  async function excluir(o: Occurrence) {
+    if (!window.confirm('Excluir esta ocorrência?')) return
+    setErro('')
+    try {
+      await api(`/occurrences/${o.id}`, { method: 'DELETE' })
+      if (editandoId === o.id) limparForm()
+      await carregar()
+      onCriada()
+    } catch (e) {
+      setErro((e as Error).message)
+    }
+  }
+
   async function enviar(e: FormEvent) {
     e.preventDefault()
     setErro('')
     setEnviando(true)
     try {
-      await api('/occurrences', {
-        method: 'POST',
-        body: JSON.stringify({ tipo, local, descricao: descricao || undefined, impacto }),
-      })
-      setLocal('')
-      setDescricao('')
-      setImpacto('baixo')
+      if (editandoId) {
+        await api(`/occurrences/${editandoId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ tipo, local, descricao, impacto }),
+        })
+      } else {
+        await api('/occurrences', {
+          method: 'POST',
+          body: JSON.stringify({ tipo, local, descricao: descricao || undefined, impacto }),
+        })
+      }
+      limparForm()
       await carregar()
       onCriada()
     } catch (e) {
@@ -82,9 +120,9 @@ export default function Occurrences({ onCriada }: { onCriada: () => void }) {
       <p className="section-desc">Viu algo na orla? Registre. Ocorrências das últimas 24h entram no cálculo do índice.</p>
       {erro && <div className="alert-erro">{erro}</div>}
       <div className="row g-3">
-        <div className="col-lg-5">
+        <div className="col-lg-6">
           <form className="card-custom" onSubmit={enviar}>
-            <div className="card-label">Nova ocorrência</div>
+            <div className="card-label">{editandoId ? 'Editando ocorrência' : 'Nova ocorrência'}</div>
             <div className="mb-3">
               <label className="form-label" htmlFor="tipo">Tipo</label>
               <select id="tipo" className="form-select" value={tipo} onChange={(e) => setTipo(e.target.value)}>
@@ -106,11 +144,14 @@ export default function Occurrences({ onCriada }: { onCriada: () => void }) {
               </select>
             </div>
             <button className="btn-primary-custom" type="submit" disabled={enviando}>
-              <i className="bi bi-send" /> {enviando ? 'Enviando…' : 'Registrar'}
+              <i className="bi bi-send" /> {enviando ? 'Enviando…' : editandoId ? 'Salvar alterações' : 'Registrar'}
             </button>
+            {editandoId && (
+              <button className="btn-cancelar" type="button" onClick={limparForm}>Cancelar edição</button>
+            )}
           </form>
         </div>
-        <div className="col-lg-7">
+        <div className="col-lg-6">
           <div className="card-custom">
             <div className="card-label">Registradas recentemente</div>
             {lista.length === 0 && <div className="empty-state">Nenhuma ocorrência registrada.</div>}
@@ -123,10 +164,18 @@ export default function Occurrences({ onCriada }: { onCriada: () => void }) {
                   <div className="occurrence-body">
                     <div className="occurrence-row-top">
                       <span className="occurrence-text">{t.rotulo}</span>
-                      <span className={`badge-impact badge-${imp.classe}`}>{imp.rotulo}</span>
+                      <span>
+                        <span className={`badge-impact badge-${imp.classe}`}>{imp.rotulo}</span>
+                        {o.userId === userId && (
+                          <span className="occ-actions">
+                            <button type="button" title="Editar" onClick={() => iniciarEdicao(o)}><i className="bi bi-pencil" /></button>
+                            <button type="button" title="Excluir" onClick={() => excluir(o)}><i className="bi bi-trash3" /></button>
+                          </span>
+                        )}
+                      </span>
                     </div>
-                    <div className="occurrence-meta"><i className="bi bi-geo-alt-fill" /> {o.local} · {tempoAtras(o.criadoEm)}</div>
                     {o.descricao && <div className="occurrence-meta">{o.descricao}</div>}
+                    <div className="occurrence-meta"><i className="bi bi-geo-alt-fill" /> {o.local} · {tempoAtras(o.criadoEm)}</div>
                   </div>
                 </div>
               )

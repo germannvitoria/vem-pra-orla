@@ -1,4 +1,4 @@
-  :root {
+:root {
     --primary: #1f9860;
     --primary-dark: #16724a;
     --primary-light: #e8f7f0;
@@ -414,3 +414,11 @@
   .chart-wrap { position: relative; height: 280px; }
   .forecast-min { color: var(--text-muted); font-weight: 600; }
   .forecast-icon { color: var(--primary); }
+
+  /* ===== EDITAR / EXCLUIR OCORRÊNCIA ===== */
+  .occ-actions { margin-left: 8px; display: inline-flex; gap: 2px; }
+  .occ-actions button { background: none; border: none; padding: 2px 6px; border-radius: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; }
+  .occ-actions button:hover { background: var(--primary-light); color: var(--primary-dark); }
+  .occ-actions button:last-child:hover { background: #fee2e2; color: #b91c1c; }
+  .btn-cancelar { margin-top: 8px; width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+  .btn-cancelar:hover { background: var(--primary-light); }

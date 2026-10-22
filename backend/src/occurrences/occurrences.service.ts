@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service.js';
 import { CreateOccurrenceDto } from './dto/create-occurrence.dto.js';
+import { UpdateOccurrenceDto } from './dto/update-occurrence.dto.js';
 
 @Injectable()
 export class OccurrencesService {
@@ -22,4 +23,23 @@ export class OccurrencesService {
     },
   });
 }
+
+  private async verificarDono(id: string, userId: string) {
+    const o = await this.prisma.occurrence.findUnique({ where: { id } });
+    if (!o) throw new NotFoundException('Ocorrência não encontrada.');
+    if (o.userId !== userId) {
+      throw new ForbiddenException('Você só pode alterar suas próprias ocorrências.');
+    }
+  }
+
+  async update(id: string, userId: string, dto: UpdateOccurrenceDto) {
+    await this.verificarDono(id, userId);
+    return this.prisma.occurrence.update({ where: { id }, data: dto });
+  }
+
+  async remove(id: string, userId: string) {
+    await this.verificarDono(id, userId);
+    await this.prisma.occurrence.delete({ where: { id } });
+    return { ok: true };
+  }
 }

@@ -35,7 +35,7 @@ export default function App() {
       <main className="container">
         <Dashboard recarregar={recarregar} />
         <Forecast />
-        <Occurrences onCriada={() => setRecarregar((n) => n + 1)} />
+        <Occurrences userId={session.user.id} onCriada={() => setRecarregar((n) => n + 1)} />
       </main>
       <Footer />
     </>
