@@ -6,6 +6,7 @@ import Footer from './Footer'
 import LoginPage from './LoginPage'
 import Dashboard from './Dashboard'
 import Occurrences from './Occurrences'
+import Forecast from './Forecast'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -33,6 +34,7 @@ export default function App() {
       <Navbar email={session.user.email} onSair={() => supabase.auth.signOut()} />
       <main className="container">
         <Dashboard recarregar={recarregar} />
+        <Forecast />
         <Occurrences onCriada={() => setRecarregar((n) => n + 1)} />
       </main>
       <Footer />

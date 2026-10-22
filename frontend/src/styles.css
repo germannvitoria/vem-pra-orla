@@ -1,4 +1,4 @@
-:root {
+  :root {
     --primary: #1f9860;
     --primary-dark: #16724a;
     --primary-light: #e8f7f0;
@@ -409,5 +409,8 @@
   @media (max-width: 760px) {
     .login-side { border-left: none; border-top: 1px solid var(--border); }
   }
-    /* Centraliza o conteúdo do painel esquerdo do login */
-  .login-main { align-items: center; text-align: center; }
+
+  /* ===== PREVISÃO (rodada 5) ===== */
+  .chart-wrap { position: relative; height: 280px; }
+  .forecast-min { color: var(--text-muted); font-weight: 600; }
+  .forecast-icon { color: var(--primary); }
