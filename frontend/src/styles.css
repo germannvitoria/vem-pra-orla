@@ -422,3 +422,9 @@
   .occ-actions button:last-child:hover { background: #fee2e2; color: #b91c1c; }
   .btn-cancelar { margin-top: 8px; width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
   .btn-cancelar:hover { background: var(--primary-light); }
+
+    /* Centraliza o conteúdo do painel esquerdo do login */
+  .login-main { align-items: center; text-align: center; }
+
+    /* Login simples: um único card, sem o painel de apresentação */
+  .login-card { grid-template-columns: 1fr; max-width: 420px; }
