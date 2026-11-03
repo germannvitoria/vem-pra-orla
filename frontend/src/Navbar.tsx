@@ -1,4 +1,4 @@
-import logo from './Logo.jpeg'
+import logo from './logo.png'
 
 type Props = { email?: string; onSair: () => void }
 

@@ -1,4 +1,5 @@
-import logo from './Logo.jpeg'
+import logo from './logo.png'
+import PrivacyNotice from './PrivacyNotice'
 
 type Props = { onEntrar: () => void }
 
@@ -17,6 +18,7 @@ export default function LoginPage({ onEntrar }: Props) {
             <i className="bi bi-google" /> Entrar com Google
           </button>
           <p className="login-foot">Projeto de TCC · IFRS Campus Porto Alegre</p>
+          <PrivacyNotice />
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import nodemailer from 'nodemailer';
+import { LOGO_BASE64 } from './logo-email.js';
 
 @Injectable()
 export class MailService {
@@ -14,6 +15,14 @@ export class MailService {
       to: para,
       subject: assunto,
       html,
+      // Logo embutido no e-mail (referenciado no HTML como cid:logo).
+      attachments: [
+        {
+          filename: 'logo.png',
+          content: Buffer.from(LOGO_BASE64, 'base64'),
+          cid: 'logo',
+        },
+      ],
     });
   }
 }
