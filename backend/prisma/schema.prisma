@@ -10,7 +10,7 @@ datasource db {
 
 model Profile {
   id                  String        @id @default(uuid()) @db.Uuid
-  telefoneWhatsapp    String?       @map("telefone_whatsapp")
+  email               String?
   notificacoesAtivas  Boolean       @default(true) @map("notificacoes_ativas")
   criadoEm            DateTime      @default(now()) @map("criado_em") @db.Timestamptz(6)
   occurrences         Occurrence[]
