@@ -8,5 +8,6 @@ import { WeatherModule } from '../weather/weather.module.js';
   imports: [CommonModule, WeatherModule],
   controllers: [LeisureIndexController],
   providers: [LeisureIndexService],
+  exports: [LeisureIndexService],
 })
 export class LeisureIndexModule {}

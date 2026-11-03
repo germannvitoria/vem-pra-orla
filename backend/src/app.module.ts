@@ -8,12 +8,14 @@ import { OccurrencesModule } from './occurrences/occurrences.module.js';
 import { WeatherModule } from './weather/weather.module.js';
 import { LeisureIndexModule } from './leisure-index/leisure-index.module.js';
 import { ProfileModule } from './profile/profile.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     ProfileModule,
+    NotificationsModule,
     CommonModule,
     OccurrencesModule,
     WeatherModule,
