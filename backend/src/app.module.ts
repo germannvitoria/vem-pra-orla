@@ -10,11 +10,14 @@ import { LeisureIndexModule } from './leisure-index/leisure-index.module.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
 import { ChatbotModule } from './chatbot/chatbot.module.js';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
+    ScheduleModule.forRoot(),
+
     ChatbotModule,
     ProfileModule,
     NotificationsModule,
