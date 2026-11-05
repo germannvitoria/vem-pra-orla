@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from './lib/api'
 import { descreverTempo } from './lib/weather'
+import Atividades from './Atividades'
 
 type Clima = {
   temperatura: number
@@ -194,6 +195,7 @@ export default function Dashboard({ recarregar }: { recarregar: number }) {
           </div>
         </div>
       </section>
+            <Atividades clima={clima} indice={dados.indice} />
     </>
   )
 }

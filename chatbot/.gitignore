@@ -1,0 +1,5 @@
+node_modules/
+.env
+# Sessão do WhatsApp (equivale a estar logado no número: nunca versionar)
+.wwebjs_auth/
+.wwebjs_cache/
