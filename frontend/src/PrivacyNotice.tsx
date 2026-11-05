@@ -28,6 +28,7 @@ export default function PrivacyNotice() {
           <li><strong>Supabase:</strong> banco de dados e autenticação. Segundo o próprio Supabase, ele atua como operador, tratando os dados conforme as instruções do projeto, com criptografia em trânsito e em repouso, e pode transferir alguns dados para os EUA e Singapura com salvaguardas contratuais.</li>
           <li><strong>Google:</strong> login com a sua conta Google e envio dos e-mails.</li>
           <li><strong>Open-Meteo:</strong> fornece a previsão do tempo. Ela recebe apenas as coordenadas da orla, nunca dados de usuários.</li>
+          <li><strong>Anthropic (assistente de IA):</strong> processa as perguntas feitas no chat e os dados do sistema usados para responder (clima e ocorrências, sem nome nem e-mail). Evite escrever dados pessoais no chat.</li>
         </ul>
 
         <p><strong>Seus direitos</strong></p>

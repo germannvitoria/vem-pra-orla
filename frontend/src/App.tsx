@@ -8,6 +8,7 @@ import Forecast from './Forecast'
 import Dashboard from './Dashboard'
 import Occurrences from './Occurrences'
 import ProfileSettings from './ProfileSettings'
+import Chatbot from './Chatbot'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -40,6 +41,7 @@ export default function App() {
         <ProfileSettings />
       </main>
       <Footer />
+      <Chatbot />
     </>
   )
 }
