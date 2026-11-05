@@ -1,0 +1,22 @@
+# Copie para .env e preencha. NUNCA faça commit do .env.
+
+# Supabase, pelo pooler (porta 6543). Caracteres especiais da senha precisam ser codificados (ex.: * vira %2A).
+DATABASE_URL="postgresql://postgres.SEU_PROJETO:SUA_SENHA@aws-0-REGIAO.pooler.supabase.com:6543/postgres?pgbouncer=true"
+# Supabase, conexão direta (porta 5432)
+DIRECT_URL="postgresql://postgres.SEU_PROJETO:SUA_SENHA@aws-0-REGIAO.pooler.supabase.com:5432/postgres"
+
+# Validação do login (Project Settings > API)
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+
+# Origem do frontend (CORS e link do e-mail)
+FRONTEND_URL=http://localhost:5173
+
+# E-mail: conta Gmail com verificação em duas etapas e senha de app (16 letras, sem espaços)
+MAIL_USER=
+MAIL_PASS=
+MAIL_FROM="Vem Pra Orla <seu-email@gmail.com>"
+
+# Chat (opcional)
+ANTHROPIC_API_KEY=
+# CHATBOT_MODEL=claude-haiku-5-5
