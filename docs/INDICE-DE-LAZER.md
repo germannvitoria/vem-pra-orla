@@ -1,7 +1,5 @@
 # Como o índice de lazer é calculado
 
-> **Rascunho:** conferir os números com `backend/src/leisure-index/leisure-index.service.ts` antes de publicar.
-
 O índice vai de **0 a 5** e combina duas notas, também de 0 a 5:
 
 ```

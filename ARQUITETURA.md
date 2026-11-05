@@ -70,18 +70,7 @@ O perfil é criado por um gatilho do banco quando o usuário entra pela primeira
 - **Chat:** limite de 20 mensagens por hora por usuário; nenhum dado pessoal vai ao modelo; textos de usuários são limpos, cortados e escapados antes de entrar no prompt; o chat só lê dados, não executa ações. As instruções do modelo tratam mensagens e dados como informação, e não como ordens. Isso reduz o risco de *prompt injection*, mas não o elimina.
 - **Privacidade:** o aviso no sistema descreve os dados tratados e quem os processa.
 
-## 6. Decisões de escopo
-
-| Decisão | Motivo | Consequência |
-|---|---|---|
-| Rodar em localhost, sem deploy | O servidor do IFRS não oferece hospedagem para o projeto | O envio das 8h só ocorre com o backend ligado |
-| Notificação por e-mail, e não por WhatsApp | A API oficial exige conta comercial e aprovação; o WhatsApp em grupo não é suportado pelo canal de teste; a alternativa não oficial arrisca banimento | WhatsApp fica como trabalho futuro |
-| Índice heurístico, sem calibração | Não há base de dados para calibrar pesos | Declarado como limitação |
-| Sem testes automatizados | Fora do escopo do trabalho | Validação manual |
-| Chat sem RAG nem histórico em banco | O contexto são sempre os dados de agora | Mais simples, e sem guardar conversas |
-| Ocorrências sem moderação | Fora do escopo | Dados não verificados |
-
-## 7. Trabalhos futuros
+## 6. Trabalhos futuros
 
 - Notificação por WhatsApp (API oficial), incluindo grupos.
 - Calibrar os pesos do índice com avaliações reais de usuários.
